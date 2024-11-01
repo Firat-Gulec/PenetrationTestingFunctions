@@ -22,20 +22,20 @@ Ports That should be scanned, default values are: 21,22,23,53,69,71,80,98,110,13
 Time (in MilliSeconds) before TimeOut, Default set to 100
 
 .EXAMPLE
-PS > Get-PortStatus -Address 10.200.66.7
+PS > Get-PortStatus -Address google.com
 
 .EXAMPLE
-PS > Get-PortStatus -Address 10.200.66.7 -ResolveHost
+PS > Get-PortStatus -Address google.com -ResolveHost
 
 .EXAMPLE
-PS > Get-PortStatus -Address 10.200.66.7 -ResolveHost -ScanPort
+PS > Get-PortStatus -Address google.com -ResolveHost -ScanPort
 Use above to do a port scan on default ports.
 
 .EXAMPLE
-PS > Get-PortStatus -Address 10.200.66.7 -ResolveHost -ScanPort -TimeOut 500
+PS > Get-PortStatus -Address google.com -ResolveHost -ScanPort -TimeOut 500
 
 .EXAMPLE
-PS > Get-PortStatus -Address 10.200.66.7 -ResolveHost -ScanPort -Port 80
+PS > Get-PortStatus -Address google.com -ResolveHost -ScanPort -Port 80
 
 .NOTES
 Author: Firat Gulec
