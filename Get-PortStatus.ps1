@@ -42,7 +42,7 @@ Author: Firat Gulec
 #>
     [CmdletBinding()] Param(
         [parameter(Mandatory = $true, Position = 0)]
-        [ValidatePattern("\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b")]
+        [ValidateNotNullOrEmpty()]
         [string]
         $Address,
         
@@ -62,7 +62,7 @@ Author: Firat Gulec
         $ping = New-Object System.Net.Networkinformation.Ping
     }
     Process {
-    
+        $status = "CLOSE"
         write-progress -activity PingSweep -status $Address 
         $pingStatus = $ping.Send($Address, $TimeOut)
         if ($pingStatus.Status -eq "Success") {
@@ -73,32 +73,32 @@ Author: Firat Gulec
             if ($ScanPort) {
                 $openPorts = @()
                 for ($i = 1; $i -le $ports.Count; $i++) {
+                    $status = "-"
                     $port = $Ports[($i - 1)]
                     write-progress -activity PortScan -status $Address  -Id 2
                     $client = New-Object System.Net.Sockets.TcpClient
                     $beginConnect = $client.BeginConnect($pingStatus.Address, $port, $null, $null)
                     if ($client.Connected) {
                         $openPorts += $port
+                        $status = "OPEN"
                     }
                     else {
                         # Wait
                         Start-Sleep -Milli $TimeOut
                         if ($client.Connected) {
                             $openPorts += $port
+                            $status = "OPEN"
                         }
                     }
                     $client.Close()
                 }
             }
-            if ($ResolveHost) {
-                #  $hostName = ([Net.DNS]::EndGetHostEntry([IAsyncResult]$getHostEntry)).HostName
-            }
             # Return Object
             New-Object PSObject -Property @{
                 IPAddress = $Address;
-                # HostName = $hostName;
+                Status = $status;
                 Ports     = $openPorts
-            } | Select-Object IPAddress, HostName, Ports
+            } | Select-Object IPAddress, Status, Ports
         }
             
     }
